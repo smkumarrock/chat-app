@@ -92,15 +92,15 @@ h2{
 </head>
 <body>
 
-<h2>{{UserName}}</h2>
+<h2>{{TargetUserDetails?.name}}</h2>
 <div class="msg-area">
     <div *ngFor="let msg of messageList">
-        <div class="container" *ngIf="CurrentName == msg.name">
+        <div class="container" *ngIf="CurrentUserDetails.name == msg.name" style="text-align: right;">
             <h3 style="margin: 0;">you</h3>
             <p style="margin: 0;">{{msg.message}}</p>
         </div>
-        <div class="container" *ngIf="CurrentName != msg.name">
-            <h3 style="margin: 0;">{{UserName}}</h3>
+        <div class="container" *ngIf="CurrentUserDetails.name != msg.name">
+            <h3 style="margin: 0;">{{TargetUserDetails?.name}}</h3>
             <p style="margin: 0;">{{msg.message}}</p>
         </div>
     </div>

@@ -30,8 +30,9 @@ export class ChatLoginComponent implements OnInit {
   chatLogin(uname, psw){
     console.log(uname, psw);
     this.chatService.saveUser({name: uname, pswd: psw});
-    this.chatService.getUserRoom().subscribe(data=>{
-      this.router.navigate(['/chat-users/'+data+'/'+uname]);
+    this.chatService.getCurrentUser().subscribe(data=>{
+      console.log(data.ops[0]._id);
+      this.router.navigate(['/chat-users/'+data.ops[0]._id]);
     });
   }
 }

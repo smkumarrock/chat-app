@@ -13,23 +13,24 @@ export class ChatInterfaceComponent implements OnInit {
   Arr = [];
   selectedRoom: String;
   newMessage: string;
-  currentRoom: string;
+  currentUserId: string;
   currentUser: string;
+  currentUserDetails: {room: String, message: String, _id: String, name: String};
   
   messageList:Array<{room: String, message: String}>=[];
   constructor(private router: Router, private chatService: ChatService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(currentuser=>{
-      this.currentRoom = currentuser.cuser;
-      this.currentUser = currentuser.cname;
+      this.currentUserId = currentuser.cuser_id;
     })
     this.chatService.UserList();
     this.chatService.getUsers().subscribe(users=>{
       console.log(users, typeof(users));
       for(var i=0; i<users.length; i++){
-        if(users[i].room == this.currentRoom){
-          // users.splice(i, 1);
+        if(users[i]._id == this.currentUserId){
+          this.currentUserDetails = users[i];
+          users.splice(i, 1);
         }
       }
       this.User_Arr = users;
@@ -37,10 +38,12 @@ export class ChatInterfaceComponent implements OnInit {
   }
   
   joinRoom(req_user){
-    console.log(req_user);
+    console.log(this.currentUserDetails);
     this.selectedRoom = req_user.room;
-    this.chatService.joinroom(req_user);
-    this.router.navigate(['/openchat/'+this.selectedRoom+'/'+req_user.name+'/'+this.currentUser]);
+    var roomJoinObj = {'curUserRoom': this.currentUserDetails.room, 'targtUserRoom': req_user.room}
+    console.log(roomJoinObj);
+    this.chatService.joinroom(roomJoinObj);
+    this.router.navigate(['/openchat/'+this.currentUserDetails.room+'-'+req_user.room]);
   }
 
 }

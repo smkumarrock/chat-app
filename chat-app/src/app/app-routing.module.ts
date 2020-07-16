@@ -6,8 +6,8 @@ import { ChatInterfaceComponent } from "./chat-interface/chat-interface.componen
 
 const routes: Routes = [
   {path:'', component: ChatLoginComponent},
-  {path:'openchat/:roomId/:UserName/:cname', component: MessageComponent},
-  {path:'chat-users/:cuser/:cname', component: ChatInterfaceComponent},
+  {path:'openchat/:roomId', component: MessageComponent},
+  {path:'chat-users/:cuser_id', component: ChatInterfaceComponent},
 ];
 
 @NgModule({

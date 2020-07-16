@@ -37,11 +37,11 @@ import { HttpClientModule }    from '@angular/common/http';
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider('123168541684'),
+            provider: new GoogleLoginProvider('614551889313816'),
           },
           {
             id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider('65841684651684'),
+            provider: new FacebookLoginProvider('614551889313816'),
           }
         ],
       } as SocialAuthServiceConfig,

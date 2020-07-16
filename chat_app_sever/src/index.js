@@ -14,13 +14,16 @@ const port = process.env.PORT || 3000;
 io.on('connection', (socket) => {
     console.log('user connected');
     socket.on('join', function(data) {
-        socket.join(data.room);
+        socket.join(data.targtUserRoom+'-'+data.curUserRoom);
+        socket.join(data.curUserRoom+'-'+data.targtUserRoom);
         console.log('the', data.name ,'has joined to ', data.room);
-        socket.broadcast.to(data.room).emit(data.message, 'new user');
+        io.emit('user joined', {data});
+        socket.broadcast.to(data.targtUserRoom+'-'+data.curUserRoom).emit(data.message, 'new user');
+        socket.broadcast.to(data.curUserRoom+'-'+data.targtUserRoom).emit(data.message, 'new user');
     });
     socket.on('message', function(data) {
         console.log(data);
-        io.in(data.room).emit('new message', {room: data.room, message: data.message, name: data.name});
+        io.in(data.CRroom, data.TRroom).emit('new message', {room: data.room, message: data.message, name: data.name});
     });
     socket.on('login', function(data){
         console.log(data.name);
@@ -31,7 +34,7 @@ io.on('connection', (socket) => {
             var myobj = { name: data.name, password: data.pswd, room: roomNo };
             dbo.collection("chatusers").insertOne(myobj, function(err, res) {
               if (err) throw err;
-              io.emit('loginres', roomNo);
+              io.emit('loginres', res);
               console.log("1 document inserted");
               db.close();
             });
@@ -46,6 +49,20 @@ io.on('connection', (socket) => {
               console.log(result);
               db.close();
               io.emit('getUser', result);
+            });
+          });
+    });
+    socket.on('single user', function(roomId){
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            var dbo = db.db("chatapp");
+            console.log('roomId', roomId);
+            
+            dbo.collection("chatusers").find({}, {'room': roomId}).toArray( function(err, result) {
+              if (err) throw err;
+              console.log(result);
+              db.close();
+              io.emit('getSingleUser', result);
             });
           });
     })

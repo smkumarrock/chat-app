@@ -40,9 +40,12 @@ export class ChatService {
     UserList(){
       this.socket.emit('userList');
     }
+    SingleUser(roomId: string){
+      this.socket.emit('single user', roomId);
+    }
 
-    getUserRoom(){
-      let observable = new Observable<String>
+    getCurrentUser(){
+      let observable = new Observable<any>
       (_observer=>{
         this.socket.on('loginres', (data)=>{
           _observer.next(data);
@@ -51,6 +54,18 @@ export class ChatService {
       });
       return observable;
     }
+
+    getSingleUser(){
+      let observable = new Observable<[{_id: String, room: String, message: String, name: String}]>
+      (_observer=>{
+        this.socket.on('getSingleUser', (data)=>{
+          _observer.next(data);
+        });
+        return ()=>{this.socket.disconnect();}
+      });
+      return observable;
+    }
+
     getUsers(){
       let observable = new Observable<[{_id: String, room: String, message: String, name: String}]>
       (_observer=>{
